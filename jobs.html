@@ -5,7 +5,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // ✅ Run ONLY on jobs.html
   if (document.getElementById("allJobs")) {
-    loadAllJobs();
+    loadAllJobs("", "", "");
   }
 });
 
@@ -28,7 +28,7 @@ async function loadAllJobs(locationFilter = "", typeFilter = "", searchFilter = 
   const countEl = document.getElementById("jobsCount");
   const noJobsMsg = document.getElementById("noJobsMessage");
 
-  // 🔒 HARD GUARD (MOST IMPORTANT LINE)
+  // 🔒 HARD GUARD
   if (!container) return;
 
   container.innerHTML = "<div class='loading'>Loading jobs...</div>";
@@ -56,18 +56,26 @@ async function loadAllJobs(locationFilter = "", typeFilter = "", searchFilter = 
       active: String(row[11]).trim().toUpperCase() === "TRUE"
     }));
 
-    // Only active jobs
+    // ✅ Only active jobs
     jobs = jobs.filter(job => job.active);
 
-    // Apply filters
+    // ✅ Normalize filters (IMPORTANT)
     jobs = jobs.filter(job => {
-      if (locationFilter && !job.location.toLowerCase().includes(locationFilter)) return false;
-      if (typeFilter && !job.type.toLowerCase().includes(typeFilter)) return false;
+      const jobLocation = job.location.toLowerCase();
+      const jobType = job.type.toLowerCase().replace("-", " ");
+
+      const locFilter = locationFilter.replace("-", " ");
+      const typeFilterNorm = typeFilter.replace("-", " ");
+
+      if (locFilter && !jobLocation.includes(locFilter)) return false;
+      if (typeFilterNorm && !jobType.includes(typeFilterNorm)) return false;
+
       if (
         searchFilter &&
         !job.title.toLowerCase().includes(searchFilter) &&
         !job.description.toLowerCase().includes(searchFilter)
       ) return false;
+
       return true;
     });
 
