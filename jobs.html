@@ -1,18 +1,21 @@
 <script>
 /* ===============================
-   PAGE LOAD
+   PAGE LOAD (SAFE)
 ================================ */
 document.addEventListener("DOMContentLoaded", () => {
-  loadAllJobs();
+  // ✅ Run ONLY on jobs.html
+  if (document.getElementById("allJobs")) {
+    loadAllJobs();
+  }
 });
 
 /* ===============================
    APPLY FILTERS
 ================================ */
 function applyFilters() {
-  const location = document.getElementById("filterLocation").value.toLowerCase();
-  const type = document.getElementById("filterType").value.toLowerCase();
-  const search = document.getElementById("filterSearch").value.toLowerCase();
+  const location = document.getElementById("filterLocation")?.value.toLowerCase() || "";
+  const type = document.getElementById("filterType")?.value.toLowerCase() || "";
+  const search = document.getElementById("filterSearch")?.value.toLowerCase() || "";
 
   loadAllJobs(location, type, search);
 }
@@ -25,8 +28,12 @@ async function loadAllJobs(locationFilter = "", typeFilter = "", searchFilter = 
   const countEl = document.getElementById("jobsCount");
   const noJobsMsg = document.getElementById("noJobsMessage");
 
+  // 🔒 HARD GUARD (MOST IMPORTANT LINE)
+  if (!container) return;
+
   container.innerHTML = "<div class='loading'>Loading jobs...</div>";
-  noJobsMsg.style.display = "none";
+  if (countEl) countEl.textContent = "Loading jobs...";
+  if (noJobsMsg) noJobsMsg.style.display = "none";
 
   try {
     const response = await fetch(GOOGLE_SHEET_JSON_URL);
@@ -40,12 +47,12 @@ async function loadAllJobs(locationFilter = "", typeFilter = "", searchFilter = 
     const rows = data.values.slice(1);
 
     let jobs = rows.map(row => ({
-      id: row[0],
-      title: row[1],
-      location: row[2],
-      salary: row[3],
-      type: row[4],
-      description: row[5],
+      id: row[0] || "",
+      title: row[1] || "",
+      location: row[2] || "",
+      salary: row[3] || "",
+      type: row[4] || "",
+      description: row[5] || "",
       active: String(row[11]).trim().toUpperCase() === "TRUE"
     }));
 
@@ -54,19 +61,13 @@ async function loadAllJobs(locationFilter = "", typeFilter = "", searchFilter = 
 
     // Apply filters
     jobs = jobs.filter(job => {
-      if (locationFilter && !job.location.toLowerCase().includes(locationFilter)) {
-        return false;
-      }
-      if (typeFilter && !job.type.toLowerCase().includes(typeFilter)) {
-        return false;
-      }
+      if (locationFilter && !job.location.toLowerCase().includes(locationFilter)) return false;
+      if (typeFilter && !job.type.toLowerCase().includes(typeFilter)) return false;
       if (
         searchFilter &&
         !job.title.toLowerCase().includes(searchFilter) &&
         !job.description.toLowerCase().includes(searchFilter)
-      ) {
-        return false;
-      }
+      ) return false;
       return true;
     });
 
@@ -75,8 +76,8 @@ async function loadAllJobs(locationFilter = "", typeFilter = "", searchFilter = 
   } catch (error) {
     console.error("Job loading error:", error);
     container.innerHTML = "";
-    countEl.textContent = "Error loading jobs";
-    noJobsMsg.style.display = "block";
+    if (countEl) countEl.textContent = "Error loading jobs";
+    if (noJobsMsg) noJobsMsg.style.display = "block";
   }
 }
 
@@ -88,15 +89,17 @@ function displayJobs(jobs) {
   const countEl = document.getElementById("jobsCount");
   const noJobsMsg = document.getElementById("noJobsMessage");
 
+  if (!container) return;
+
   if (!jobs.length) {
     container.innerHTML = "";
-    countEl.textContent = "No jobs found";
-    noJobsMsg.style.display = "block";
+    if (countEl) countEl.textContent = "No jobs found";
+    if (noJobsMsg) noJobsMsg.style.display = "block";
     return;
   }
 
-  noJobsMsg.style.display = "none";
-  countEl.textContent = `Showing ${jobs.length} job${jobs.length > 1 ? "s" : ""}`;
+  if (noJobsMsg) noJobsMsg.style.display = "none";
+  if (countEl) countEl.textContent = `Showing ${jobs.length} job${jobs.length > 1 ? "s" : ""}`;
 
   container.innerHTML = jobs.map(job => `
     <div class="job-card">
@@ -106,12 +109,8 @@ function displayJobs(jobs) {
       </div>
 
       <div class="job-meta">
-        <div class="job-meta-item">
-          📍 ${job.location}
-        </div>
-        <div class="job-meta-item">
-          💰 ${job.salary}
-        </div>
+        <div class="job-meta-item">📍 ${job.location}</div>
+        <div class="job-meta-item">💰 ${job.salary}</div>
       </div>
 
       <p class="job-description">${job.description}</p>
