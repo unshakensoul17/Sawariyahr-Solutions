@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sawariya HR Solutions - Find Jobs in India</title>
+    <meta name="description" content="Find verified job openings across India. No registration required. Apply easily and get fast HR response.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Sawariya HR Solutions</h1>
+                </div>
+                <nav class="nav" id="mainNav">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="jobs.html" class="nav-link">Jobs</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                    <a href="https://wa.me/917772074181" class="btn-whatsapp" target="_blank">
+                        Apply via WhatsApp
+                    </a>
+                </nav>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h2 class="hero-title">Find the Right Job. Apply Easily.</h2>
+                    <p class="hero-subtitle">Verified job openings across multiple industries. No registration required.</p>
+                    <div class="hero-buttons">
+                        <a href="jobs.html" class="btn btn-primary">View Jobs</a>
+                        <a href="jobs.html#apply" class="btn btn-secondary">Apply Now</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <svg viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Professional recruitment illustration -->
+                        <rect x="50" y="80" width="200" height="250" rx="10" fill="#f0f9ff" stroke="#059669" stroke-width="2"/>
+                        <circle cx="150" cy="140" r="30" fill="#059669"/>
+                        <rect x="100" y="190" width="100" height="8" rx="4" fill="#d1fae5"/>
+                        <rect x="100" y="210" width="80" height="8" rx="4" fill="#d1fae5"/>
+                        <rect x="100" y="230" width="100" height="8" rx="4" fill="#d1fae5"/>
+                        
+                        <rect x="280" y="120" width="180" height="200" rx="10" fill="#f0fdf4" stroke="#059669" stroke-width="2"/>
+                        <rect x="300" y="150" width="60" height="60" rx="5" fill="#059669"/>
+                        <rect x="370" y="150" width="70" height="15" rx="4" fill="#d1fae5"/>
+                        <rect x="370" y="175" width="70" height="15" rx="4" fill="#d1fae5"/>
+                        <rect x="300" y="230" width="140" height="10" rx="4" fill="#d1fae5"/>
+                        <rect x="300" y="250" width="140" height="10" rx="4" fill="#d1fae5"/>
+                        <rect x="300" y="270" width="100" height="10" rx="4" fill="#d1fae5"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Jobs Section -->
+    <section class="featured-jobs">
+        <div class="container">
+            <h2 class="section-title">Latest Job Openings</h2>
+            <p class="section-subtitle">Browse our verified job opportunities</p>
+            <div class="jobs-grid" id="featuredJobs">
+                <!-- Jobs will be loaded here dynamically -->
+                <div class="loading">Loading jobs...</div>
+            </div>
+            <div class="text-center" style="margin-top: 2rem;">
+                <a href="jobs.html" class="btn btn-primary">View All Jobs</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-choose">
+        <div class="container">
+            <h2 class="section-title">Why Choose Sawariya HR Solutions?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3>Verified Employers</h3>
+                    <p>All job postings are from verified and trusted companies</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                        </svg>
+                    </div>
+                    <h3>No Registration Required</h3>
+                    <p>Apply directly without creating an account. Quick and simple.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <h3>Fast HR Response</h3>
+                    <p>Get quick responses from our dedicated HR team</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2">
+                            <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <h3>Free for Candidates</h3>
+                    <p>100% free job search and application for all candidates</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Browse Jobs</h3>
+                    <p>Search through verified job openings across various industries and locations</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Apply Online</h3>
+                    <p>Submit your application directly through our website or WhatsApp</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>HR Contacts You</h3>
+                    <p>Our HR team reviews your application and contacts you for the next steps</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Can't Find the Right Job?</h2>
+                <p>Submit your details and we'll notify you when suitable positions become available</p>
+                <a href="apply.html" class="btn btn-white">Submit Your Details</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Sawariya HR Solutions</h3>
+                    <p>Connecting job seekers with verified employers across India</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="jobs.html">Browse Jobs</a></li>
+                        <li><a href="apply.html">Apply Now</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul>
+                        <li>📞 +91 7772074181</li>
+                        <li>📧sawariyahrsolution2026@gmail.com</li>
+                        <li>📍 Indore, Madhya Pradesh</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
+                    <p class="footer-disclaimer">All candidate data is handled securely and confidentially</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Sawariya HR Solutions. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

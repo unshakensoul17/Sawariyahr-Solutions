@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Jobs - Sawariya HR Solutions</title>
+    <meta name="description" content="Browse all available job openings. Find your perfect job opportunity.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Sawariya HR Solutions</h1>
+                </div>
+                <nav class="nav" id="mainNav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="jobs.html" class="nav-link active">Jobs</a>
+                    <a href="index.html#contact" class="nav-link">Contact</a>
+                    <a href="https://wa.me/917772074181" class="btn-whatsapp" target="_blank">
+                        Apply via WhatsApp
+                    </a>
+                </nav>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="hero" style="padding: 2rem 0;">
+        <div class="container">
+            <h2 class="section-title" style="margin-bottom: 0.5rem;">Available Jobs</h2>
+            <p class="section-subtitle" style="margin-bottom: 0;">Find your perfect job opportunity from our verified employers</p>
+        </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section style="padding: 2rem 0; background: var(--background-light);">
+        <div class="container">
+            <div class="filters">
+                <h3 style="margin-bottom: 1rem; font-size: 1.125rem;">Filter Jobs</h3>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="filterLocation">Location</label>
+                        <select id="filterLocation">
+                            <option value="">All Locations</option>
+                            <option value="mumbai">Mumbai</option>
+                            <option value="pune">Pune</option>
+                            <option value="delhi">Delhi</option>
+                            <option value="bangalore">Bangalore</option>
+                            <option value="hyderabad">Hyderabad</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterType">Job Type</label>
+                        <select id="filterType">
+                            <option value="">All Types</option>
+                            <option value="full-time">Full-time</option>
+                            <option value="part-time">Part-time</option>
+                            <option value="contract">Contract</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterSearch">Search</label>
+                        <input type="text" id="filterSearch" placeholder="Job title or keyword">
+                    </div>
+                    <div class="filter-group" style="justify-content: flex-end;">
+                        <label>&nbsp;</label>
+                        <button class="btn btn-primary btn-small" onclick="applyFilters()">Apply Filters</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jobs Listing -->
+    <section style="padding: 3rem 0;">
+        <div class="container">
+            <div id="jobsCount" style="margin-bottom: 1.5rem; color: var(--text-gray);">
+                Loading jobs...
+            </div>
+            <div class="jobs-grid" id="allJobs">
+                <!-- Jobs will be loaded here dynamically -->
+                <div class="loading">Loading jobs...</div>
+            </div>
+            <div id="noJobsMessage" style="display: none; text-align: center; padding: 3rem; color: var(--text-gray);">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 1rem;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <h3 style="margin-bottom: 0.5rem;">No Jobs Found</h3>
+                <p>Try adjusting your filters or check back later for new opportunities.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>Sawariya HR Solutions</h3>
+                    <p>Connecting job seekers with verified employers across India</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="jobs.html">Browse Jobs</a></li>
+                        <li><a href="apply.html">Apply Now</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <ul>
+                        <li>📞 +91 7772074181</li>
+                        <li>📧 sawariyahrsolution2026@gmail.com</li>
+                        <li>📍 Indore, Madhya Pradesh</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
+                    <p class="footer-disclaimer">All candidate data is handled securely and confidentially</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Sawariya HR Solutions. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Load all jobs on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllJobs();
+        });
+
+        function applyFilters() {
+            const location = document.getElementById('filterLocation').value.toLowerCase();
+            const type = document.getElementById('filterType').value.toLowerCase();
+            const search = document.getElementById('filterSearch').value.toLowerCase();
+            
+            loadAllJobs(location, type, search);
+        }
+
+        function loadAllJobs(locationFilter = '', typeFilter = '', searchFilter = '') {
+            // In production, replace this URL with your Google Sheets JSON endpoint
+            // Example: https://sheets.googleapis.com/v4/spreadsheets/YOUR_SHEET_ID/values/Sawariya_Jobs?key=YOUR_API_KEY
+            
+            const SHEET_JSON_URL = 'YOUR_GOOGLE_SHEETS_JSON_URL';
+            
+            // Sample data for demonstration
+            const sampleJobs = [
+                {
+                    id: 'JOB001',
+                    title: 'Sales Executive',
+                    location: 'Mumbai, Maharashtra',
+                    salary: '₹20,000 - ₹35,000/month',
+                    type: 'Full-time',
+                    description: 'Looking for dynamic sales professionals with 1-2 years experience in B2B sales. Good communication skills and target-driven attitude required.',
+                    active: true
+                },
+                {
+                    id: 'JOB002',
+                    title: 'Warehouse Supervisor',
+                    location: 'Pune, Maharashtra',
+                    salary: '₹25,000 - ₹40,000/month',
+                    type: 'Full-time',
+                    description: 'Experience in warehouse management, inventory control, and team supervision required. Must have 3+ years experience.',
+                    active: true
+                },
+                {
+                    id: 'JOB003',
+                    title: 'Customer Service Representative',
+                    location: 'Delhi NCR',
+                    salary: '₹18,000 - ₹28,000/month',
+                    type: 'Full-time',
+                    description: 'Handle customer queries via phone and email. Good English communication required. Freshers can apply.',
+                    active: true
+                },
+                {
+                    id: 'JOB004',
+                    title: 'Delivery Driver',
+                    location: 'Bangalore, Karnataka',
+                    salary: '₹15,000 - ₹22,000/month',
+                    type: 'Full-time',
+                    description: 'Valid driving license required. Experience with 2-wheeler or 4-wheeler. Flexible working hours.',
+                    active: true
+                },
+                {
+                    id: 'JOB005',
+                    title: 'Accountant',
+                    location: 'Hyderabad, Telangana',
+                    salary: '₹25,000 - ₹45,000/month',
+                    type: 'Full-time',
+                    description: 'Tally, GST knowledge required. Minimum 2 years experience. BCom or MCom preferred.',
+                    active: true
+                },
+                {
+                    id: 'JOB006',
+                    title: 'Data Entry Operator',
+                    location: 'Mumbai, Maharashtra',
+                    salary: '₹12,000 - ₹18,000/month',
+                    type: 'Part-time',
+                    description: 'Fast typing speed required. Basic MS Office knowledge. Work from office. Morning shift available.',
+                    active: true
+                }
+            ];
+
+            // Filter jobs
+            let filteredJobs = sampleJobs.filter(job => {
+                if (!job.active) return false;
+                
+                if (locationFilter && !job.location.toLowerCase().includes(locationFilter)) {
+                    return false;
+                }
+                
+                if (typeFilter && !job.type.toLowerCase().includes(typeFilter)) {
+                    return false;
+                }
+                
+                if (searchFilter && !job.title.toLowerCase().includes(searchFilter) && 
+                    !job.description.toLowerCase().includes(searchFilter)) {
+                    return false;
+                }
+                
+                return true;
+            });
+
+            displayJobs(filteredJobs);
+        }
+
+        function displayJobs(jobs) {
+            const container = document.getElementById('allJobs');
+            const countEl = document.getElementById('jobsCount');
+            const noJobsMsg = document.getElementById('noJobsMessage');
+            
+            if (jobs.length === 0) {
+                container.innerHTML = '';
+                noJobsMsg.style.display = 'block';
+                countEl.textContent = 'No jobs found';
+                return;
+            }
+            
+            noJobsMsg.style.display = 'none';
+            countEl.textContent = `Showing ${jobs.length} job${jobs.length > 1 ? 's' : ''}`;
+            
+            container.innerHTML = jobs.map(job => `
+                <div class="job-card">
+                    <div class="job-header">
+                        <h3 class="job-title">${job.title}</h3>
+                        <span class="job-type-badge">${job.type}</span>
+                    </div>
+                    <div class="job-meta">
+                        <div class="job-meta-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            ${job.location}
+                        </div>
+                        <div class="job-meta-item">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                            ${job.salary}
+                        </div>
+                    </div>
+                    <p class="job-description">${job.description}</p>
+                    <div class="job-actions">
+                        <a href="job-details.html?id=${job.id}" class="btn btn-outline btn-small">View Details</a>
+                        <a href="apply.html?job=${job.id}" class="btn btn-primary btn-small">Apply Now</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
