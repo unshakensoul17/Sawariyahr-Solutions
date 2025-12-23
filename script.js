@@ -49,7 +49,7 @@ async function fetchJobsFromGoogleSheets() {
     }));
 
     // Return only active jobs
-    //return jobs.filter(job => job.active);
+    return jobs.filter(job => job.active);
 
   } catch (error) {
     console.error("Error fetching jobs from Google Sheets:", error);
