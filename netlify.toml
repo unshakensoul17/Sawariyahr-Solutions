@@ -1,0 +1,87 @@
+# Netlify Configuration File
+# This file controls how Netlify builds and deploys your site
+
+[build]
+  # No build command needed for static HTML site
+  publish = "/"
+
+# Form settings
+[build.processing]
+  skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+
+[build.processing.images]
+  compress = true
+
+# Redirect rules
+[[redirects]]
+  from = "/job/*"
+  to = "/job-details.html?id=:splat"
+  status = 200
+
+[[redirects]]
+  from = "/apply/*"
+  to = "/apply.html?job=:splat"
+  status = 200
+
+# 404 redirect to home page
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 404
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Cache static assets
+[[headers]]
+  for = "/styles.css"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/script.js"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Environment variables (set these in Netlify dashboard)
+# GOOGLE_SHEETS_API_KEY = "your-api-key"
+# GOOGLE_SHEET_ID = "your-sheet-id"
+
+# Form notifications
+[forms]
+  # This enables Netlify Forms
+  # Configure email notifications in Netlify dashboard
+
+# Functions (optional, for advanced features)
+[functions]
+  directory = "netlify/functions"
+
+# Plugin configuration (optional)
+# [[plugins]]
+#   package = "@netlify/plugin-sitemap"
+
+# Development settings
+[dev]
+  command = "" # No dev command needed
+  port = 8888
+  targetPort = 8888
+  publish = "/"
+  autoLaunch = true
