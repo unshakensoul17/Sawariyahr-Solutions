@@ -3,7 +3,7 @@
 
 [build]
   # No build command needed for static HTML site
-  publish = "."
+  publish = "/"
 
 # Form settings
 [build.processing]
