@@ -8,14 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
             mainNav.classList.toggle('active');
         });
 
-        // Close menu when clicking outside
         document.addEventListener('click', function(e) {
             if (!mobileMenuBtn.contains(e.target) && !mainNav.contains(e.target)) {
                 mainNav.classList.remove('active');
             }
         });
 
-        // Close menu when clicking a link
         const navLinks = mainNav.querySelectorAll('.nav-link');
         navLinks.forEach(link => {
             link.addEventListener('click', function() {
@@ -30,29 +28,111 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Google Sheets Configuration
-// Connected to your live Google Sheets database
+// ===================================================================
+// GOOGLE SHEETS CONNECTION - YOUR LIVE ENDPOINT
+// ===================================================================
 const GOOGLE_SHEET_JSON_URL = 'https://sheets.googleapis.com/v4/spreadsheets/1EssTu-5IUbgIZTnAA3vA0U4PJKgiBnMlRMi6IlbKq_M/values/Sawariya_Jobs!A1:L1000?key=AIzaSyBmPzDMUIuYnLNL9Eqhmb0P6KxZj_3Lcoc';
 
-// Function to load featured jobs (homepage)
+console.log('🔗 SAWARIYA HR - Google Sheets Connection Initialized');
+console.log('📍 Endpoint:', GOOGLE_SHEET_JSON_URL);
+console.log('📝 Sheet Name: Sawariya_Jobs');
+console.log('🔑 API Key: Connected');
+
+// ===================================================================
+// FETCH JOBS FROM GOOGLE SHEETS - LIVE DATA ONLY
+// ===================================================================
+async function fetchJobsFromGoogleSheets() {
+    console.log('🔍 Fetching jobs from Google Sheets...');
+    
+    try {
+        const response = await fetch(GOOGLE_SHEET_JSON_URL);
+        console.log('📡 Response Status:', response.status, response.statusText);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log('📊 Raw data received:', data);
+        
+        // Parse Google Sheets API v4 response
+        if (data.values && data.values.length > 1) {
+            const headers = data.values[0];
+            const rows = data.values.slice(1);
+            
+            console.log('📋 Found', rows.length, 'rows in sheet');
+            console.log('📑 Headers:', headers);
+            
+            // Map rows to job objects
+            const jobs = rows.map((row, index) => {
+                // Skip empty rows
+                if (!row || row.length === 0 || !row[0]) {
+                    console.log(`⏭️ Skipping empty row ${index + 2}`);
+                    return null;
+                }
+                
+                const job = {
+                    id: row[0] || '',
+                    title: row[1] || '',
+                    location: row[2] || '',
+                    salary: row[3] || '',
+                    type: row[4] || '',
+                    description: row[5] || '',
+                    requirements: row[6] ? row[6].split('|').map(r => r.trim()) : [],
+                    responsibilities: row[7] ? row[7].split('|').map(r => r.trim()) : [],
+                    benefits: row[8] ? row[8].split('|').map(b => b.trim()) : [],
+                    company: row[9] || '',
+                    posted: row[10] || '',
+                    active: (row[11] || '').toString().toUpperCase() === 'TRUE'
+                };
+                
+                console.log(`${job.active ? '✅' : '❌'} Job ${job.id}: ${job.title} (Active: ${job.active})`);
+                
+                return job;
+            }).filter(job => job !== null && job.active);
+            
+            console.log('🎯 Active jobs found:', jobs.length);
+            console.log('📦 Jobs to display:', jobs);
+            
+            return jobs;
+        } else {
+            console.warn('⚠️ No data found in sheet or only headers present');
+            return [];
+        }
+
+    } catch (error) {
+        console.error('❌ ERROR fetching jobs:', error);
+        console.error('📍 Error details:', error.message);
+        return [];
+    }
+}
+
+// ===================================================================
+// LOAD FEATURED JOBS (HOMEPAGE)
+// ===================================================================
 function loadFeaturedJobs() {
+    console.log('🏠 Loading featured jobs for homepage...');
     const container = document.getElementById('featuredJobs');
     
-    // Fetch from Google Sheets
     fetchJobsFromGoogleSheets().then(jobs => {
         if (jobs && jobs.length > 0) {
+            console.log('✅ Displaying', Math.min(3, jobs.length), 'featured jobs');
             displayFeaturedJobs(jobs.slice(0, 3));
         } else {
+            console.warn('⚠️ No jobs available to display');
             container.innerHTML = '<p style="text-align: center; padding: 2rem; color: var(--text-gray);">No jobs available at the moment. Check back soon!</p>';
         }
     }).catch(error => {
-        console.error('Error loading jobs:', error);
+        console.error('❌ Error loading featured jobs:', error);
         container.innerHTML = '<p style="text-align: center; padding: 2rem; color: var(--text-gray);">Unable to load jobs. Please try again later.</p>';
     });
 }
 
-// Function to display featured jobs
+// ===================================================================
+// DISPLAY FEATURED JOBS
+// ===================================================================
 function displayFeaturedJobs(jobs) {
+    console.log('🎨 Rendering', jobs.length, 'featured job cards');
     const container = document.getElementById('featuredJobs');
     
     if (jobs.length === 0) {
@@ -61,9 +141,12 @@ function displayFeaturedJobs(jobs) {
     }
 
     container.innerHTML = jobs.map(job => createJobCard(job)).join('');
+    console.log('✅ Featured jobs rendered successfully');
 }
 
-// Function to create job card HTML
+// ===================================================================
+// CREATE JOB CARD HTML
+// ===================================================================
 function createJobCard(job) {
     return `
         <div class="job-card">
@@ -95,65 +178,32 @@ function createJobCard(job) {
     `;
 }
 
-// Function to fetch jobs from Google Sheets
-async function fetchJobsFromGoogleSheets() {
-    try {
-        const response = await fetch(GOOGLE_SHEET_JSON_URL);
-        
-        if (!response.ok) {
-            throw new Error('Failed to fetch jobs from Google Sheets');
-        }
-
-        const data = await response.json();
-        
-        // Parse Google Sheets API v4 response
-        if (data.values && data.values.length > 1) {
-            const headers = data.values[0]; // First row contains headers
-            const rows = data.values.slice(1); // Remaining rows contain data
-            
-            // Map rows to job objects
-            const jobs = rows.map(row => {
-                // Skip empty rows
-                if (!row || row.length === 0 || !row[0]) return null;
-                
-                return {
-                    id: row[0] || '',
-                    title: row[1] || '',
-                    location: row[2] || '',
-                    salary: row[3] || '',
-                    type: row[4] || '',
-                    description: row[5] || '',
-                    requirements: row[6] ? row[6].split('|').map(r => r.trim()) : [],
-                    responsibilities: row[7] ? row[7].split('|').map(r => r.trim()) : [],
-                    benefits: row[8] ? row[8].split('|').map(b => b.trim()) : [],
-                    company: row[9] || '',
-                    posted: row[10] || '',
-                    active: (row[11] || '').toString().toUpperCase() === 'TRUE'
-                };
-            }).filter(job => job !== null && job.active); // Filter out null and inactive jobs
-            
-            return jobs;
-        }
-
-        return [];
-    } catch (error) {
-        console.error('Error fetching jobs from Google Sheets:', error);
-        return [];
-    }
-}
-
-// Get job by ID
+// ===================================================================
+// GET JOB BY ID
+// ===================================================================
 async function getJobById(jobId) {
+    console.log('🔍 Looking for job with ID:', jobId);
+    
     try {
         const jobs = await fetchJobsFromGoogleSheets();
-        return jobs.find(job => job.id === jobId) || null;
+        const job = jobs.find(job => job.id === jobId) || null;
+        
+        if (job) {
+            console.log('✅ Job found:', job.title);
+        } else {
+            console.warn('⚠️ Job not found with ID:', jobId);
+        }
+        
+        return job;
     } catch (error) {
-        console.error('Error getting job by ID:', error);
+        console.error('❌ Error getting job by ID:', error);
         return null;
     }
 }
 
-// Smooth scrolling for anchor links
+// ===================================================================
+// SMOOTH SCROLLING
+// ===================================================================
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         const href = this.getAttribute('href');
@@ -170,21 +220,31 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Form handling - Success redirect
-// Netlify Forms will handle the submission automatically
-// You can customize the success page in netlify.toml or form settings
-
-// Utility function to format date
+// ===================================================================
+// UTILITY FUNCTIONS
+// ===================================================================
 function formatDate(date) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(date).toLocaleDateString('en-IN', options);
 }
 
-// Export functions for use in other pages
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        fetchJobsFromGoogleSheets,
-        getJobById,
-        createJobCard
-    };
-}
+// ===================================================================
+// INITIALIZATION LOG
+// ===================================================================
+console.log('✅ Sawariya HR Solutions - JavaScript Loaded');
+console.log('🌐 Ready to fetch live job data from Google Sheets');
+console.log('📌 Remember: Jobs with active=TRUE will display on website');
+console.log('');
+console.log('💡 To debug:');
+console.log('   1. Check if GOOGLE_SHEET_JSON_URL is correct');
+console.log('   2. Verify sheet name is exactly "Sawariya_Jobs"');
+console.log('   3. Ensure sheet is public (Anyone with link can view)');
+console.log('   4. Check jobs have active=TRUE in column L');
+console.log('');
+console.log('🧪 To test API directly, open this URL:');
+console.log('   ' + GOOGLE_SHEET_JSON_URL);
+console.log('');
+
+// ===================================================================
+// NO SAMPLE DATA IN THIS FILE - ALL DATA FROM GOOGLE SHEETS
+// ===================================================================
